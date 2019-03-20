@@ -1,0 +1,10 @@
+header, footer {
+    color: white;
+    background-color: #005fff;
+    text-align: center;
+    padding: 20px;
+}
+
+.main-div {
+    padding: 20px;
+}

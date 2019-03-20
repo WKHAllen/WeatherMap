@@ -1,2 +1,0 @@
-# WeatherMap
-A weather map
