@@ -1,5 +1,10 @@
 "use strict";
 
+// on search for city/zip code, redirect to same page but with url arguments, and parse them on page load
+
+var ipUrl = "https://ipinfo.io/json";
+var apiKey = "be01eab3dff98198cc699228d54aee01";
+
 async function getData(url) {
     return fetch(url)
     .then(response => response.json())
@@ -7,8 +12,7 @@ async function getData(url) {
 }
 
 async function getLocation() {
-    let url = "https://ipinfo.io/json";
-    let loc = await getData(url);
+    let loc = await getData(ipUrl);
     return [loc["city"], loc["region"], loc["country"]].join(", ");
 }
 
