@@ -81,3 +81,17 @@ class WeatherOfPlace extends Subject{
     }
 }
 
+class Favorites{
+    constructor(){
+        this._favs=[];
+    }
+
+    get favs(){
+        return this._favs;
+    }
+
+    set favs(val){
+        this._favs=val;
+    }
+}
+
