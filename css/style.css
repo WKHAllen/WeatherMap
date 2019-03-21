@@ -8,3 +8,13 @@ header, footer {
 .main-div {
     padding: 20px;
 }
+
+#current-weather{
+    border: solid black;
+    
+    margin: 0 auto;
+}
+
+#favorites{
+    border:dotted 2px blue;
+}
