@@ -10,6 +10,9 @@ var favoriteLocations = ["Decorah, Iowa, United States", "Saint Paul, Minnesota,
 function locationFromParams() {
     let params = new URLSearchParams(window.location.search);
     let location = params.get("location");
+    if (location === null) {
+        return null;
+    }
     return decodeURI(location);
 }
 
@@ -77,6 +80,8 @@ async function getWeather(location) {//returns dataArray of weather data from gi
 
 async function main() {
     let locFromApi = locationFromParams() || await getLocation();
+    console.log(locFromApi);
+    populateFavoriteLocations();
     document.getElementById("current-weather").innerHTML = locFromApi;
     let londonWeatherData = await getWeather("London,uk");//this url is for London
     let london = new WeatherOfPlace(...londonWeatherData);
