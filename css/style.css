@@ -11,10 +11,22 @@ header, footer {
 
 #current-weather{
     border: solid black;
-    
+
     margin: 0 auto;
 }
 
 #favorites{
     border:dotted 2px blue;
+}
+
+th, td{
+ border: solid;
+}
+
+table{
+    border: solid;
+}
+
+#extra h2{
+    text-align: center;
 }
