@@ -37,6 +37,7 @@ class WeatherOfPlace extends Subject{
         this._humidity=humidity;
         this._sr=sr;
         this._ss=ss;
+        this.publish("The list is cleaned up", this);
     }
 
     get location() {
