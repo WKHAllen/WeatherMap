@@ -4,9 +4,35 @@
 var locUrl = "http://www.geoplugin.net/json.gp"
 var apiKey = "be01eab3dff98198cc699228d54aee01";
 var apiKey2 = "b8f381522463f5ee0c04df3bfca0ca15";//josh's key in case of too many requests
+var conversionapyKey = "v00wb6EzD4xv6ZbTmofXJp5gNo4rkKYCM4g8KxTWgGcqQLvs";
+var userid= "jvansant"
+var convertUrl="https://neutrinoapi.com/convert"
+var birthdayUrl="https://raw.githubusercontent.com/alebelcor/celeb-birthdays/master/output/celeb-birthdays.json";
 var favoriteLocations = [];
 var currLocation = "";
+var d=new Date();
+var weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+var bDays=["Josh", "Will", "Roman"];
 
+function convertUnixToCentral(unix_timestamp) {
+    // Create a new JavaScript Date object based on the timestamp
+    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    var date = new Date(unix_timestamp*1000);
+    // Hours part from the timestamp
+    var hours = date.getHours();
+    // Minutes part from the timestamp
+    var minutes = "0" + date.getMinutes();
+    // Seconds part from the timestamp
+    var seconds = "0" + date.getSeconds();
+    // Will display time in 10:30:23 format
+    var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return formattedTime;
+  }
+
+function temperatureConverter(valNum) {
+    valNum = parseFloat(valNum);
+    return parseInt(((valNum-273.15)*1.8)+32);
+}
 function addFavorite(){
     
     if(favoriteLocations.includes(currLocation)){
@@ -29,6 +55,12 @@ async function getData(url) {
     .then(response => response.json())
     .catch(error => console.log(error));
 }
+
+async function getBirthdays(date){
+    let d = await getData(birthdayUrl);
+    return d[date];
+}
+
 
 function locationFromParams() { //searches for location already in page
     let params = new URLSearchParams(window.location.search);
@@ -93,12 +125,12 @@ async function getWeather(location) {//returns dataArray of weather data from gi
     currLocation=dataArray[9];
     document.getElementById("location").innerHTML = dataArray[0];
     document.getElementById("pic").src = "http://openweathermap.org/img/w/"+dataArray[2]+".png";
-    document.getElementById("temp").innerHTML = dataArray[3] + "&deg;";
-    document.getElementById("high").innerHTML = dataArray[4];
-    document.getElementById("low").innerHTML = dataArray[5];
+    document.getElementById("temp").innerHTML = temperatureConverter(dataArray[3]) + "&deg;";
+    document.getElementById("high").innerHTML = temperatureConverter(dataArray[4]);
+    document.getElementById("low").innerHTML = temperatureConverter(dataArray[5]);
     document.getElementById("humidity").innerHTML = dataArray[6];
-    document.getElementById("sunrise").innerHTML = dataArray[7];
-    document.getElementById("sunset").innerHTML = dataArray[8];
+    document.getElementById("sunrise").innerHTML = convertUnixToCentral(dataArray[7]);
+    document.getElementById("sunset").innerHTML = convertUnixToCentral(dataArray[8]);
 }
 
 function changeLocation(){
@@ -111,7 +143,40 @@ function changeLocation(){
     window.location.replace(url);
 }
 
+    function formateDateForApi(da){
+
+        let m = da.getMonth();
+        if(m.length<2){
+            m = "0"+m
+        }
+        let d = da.getDate();
+        if(d.length<2){
+            d= "0"+d
+        }
+        let date = m+d;
+        return date;
+    }
+
+
+    function loadDay(da, peopleArray){
+        console.log(peopleArray);//did not load on first try fix this
+        document.getElementById("day").innerHTML = weekDays[da.getDay()];//sets day of week
+
+        let listElement = document.getElementById("peeps");
+        listElement.innerHTML = "";
+        for(let person of bDays){
+            let li = document.createElement("li");
+            li.innerHTML = person;
+            listElement.appendChild(li);
+        }
+
+
+
+}
+
 async function main() {
+
+    loadDay(d, await getBirthdays(formateDateForApi(d)));
     let locFromApi = locationFromParams() || await getLocation();
     populateMainData(await getWeather(locFromApi));
     loadFavorites();
