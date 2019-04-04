@@ -4,24 +4,39 @@
 var locUrl = "http://www.geoplugin.net/json.gp"
 var apiKey = "be01eab3dff98198cc699228d54aee01";
 var apiKey2 = "b8f381522463f5ee0c04df3bfca0ca15";//josh's key in case of too many requests
+var conversionapyKey = "v00wb6EzD4xv6ZbTmofXJp5gNo4rkKYCM4g8KxTWgGcqQLvs";
+var userid= "jvansant";
+var convertUrl="https://neutrinoapi.com/convert";
+var birthdayUrl="https://raw.githubusercontent.com/alebelcor/celeb-birthdays/master/output/celeb-birthdays.json";
 var favoriteLocations = [];
 var currLocation = "";
+var d=new Date();
+var weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+var bDays=["Josh", "Will", "Roman"];
+var locFromApi;
 
-function addFavorite(){
-    
-    if(favoriteLocations.includes(currLocation)){
-        alert("location already favorited");
-    }
-    else{
-        favoriteLocations.push(currLocation);
-        saveFavorites();
-        populateFavoriteLocations();
-    }
+function addFavorite() {
+    favoriteLocations.push(currLocation);
+    saveFavorites();
+    populateFavoriteLocations();
+    checkAddFavorites();
+}
+
+function removeFavorite() {
+    favoriteLocations.splice(favoriteLocations.indexOf(currLocation), 1);
+    saveFavorites();
+    populateFavoriteLocations();
+    checkAddFavorites();
+}
+
+async function getBirthdays(date){
+    let d = await getData(birthdayUrl);
+    return d[date];
 }
 
 async function getLocation() {
     let loc = await getData(locUrl);
-    return [loc["geoplugin_city"], loc["geoplugin_region"]].join(", ");
+    return [loc["geoplugin_city"], loc["geoplugin_region"]].join(", ").toUpperCase();
 }
 
 async function getData(url) {
@@ -67,7 +82,7 @@ function loadFavorites(){ // load favorites from localStorage in "favoriteLocati
         populateFavoriteLocations();
     }
     else{
-        console.log("No favorites saved.")
+        // console.log("No favorites saved.");
     }  
 }
 
@@ -89,16 +104,44 @@ async function getWeather(location) {//returns dataArray of weather data from gi
     return dataArray;
 }
 
- function populateMainData(dataArray){
+function kelvinToFahrenheit(kelvin) {
+    let celsius = kelvin - 273.15;
+    let fahrenheit = celsius * 1.8 + 32;
+    return fahrenheit;
+}
+
+function round(value, decimals) {
+    let tenpower = Math.pow(10, decimals);
+    return Math.round(value * tenpower) / tenpower;
+}
+
+function formatDate(timestamp) {
+    let dateobj = new Date(timestamp * 1000);
+    let date = ((dateobj.getHours() - 1) % 12 + 1) + ":" + dateobj.getMinutes();
+    if (dateobj.getHours() <= 12) {
+        date += " AM";
+    } else {
+        date += " PM";
+    }
+    return date;
+}
+
+function onEnter(event) {
+    if (event.keyCode === 13) {
+        changeLocation();
+    }
+}
+
+function populateMainData(dataArray){
     currLocation=dataArray[9];
     document.getElementById("location").innerHTML = dataArray[0];
     document.getElementById("pic").src = "http://openweathermap.org/img/w/"+dataArray[2]+".png";
-    document.getElementById("temp").innerHTML = dataArray[3] + "&deg;";
-    document.getElementById("high").innerHTML = dataArray[4];
-    document.getElementById("low").innerHTML = dataArray[5];
-    document.getElementById("humidity").innerHTML = dataArray[6];
-    document.getElementById("sunrise").innerHTML = dataArray[7];
-    document.getElementById("sunset").innerHTML = dataArray[8];
+    document.getElementById("temp").innerHTML = round(kelvinToFahrenheit(dataArray[3]), 1) + "&deg;F";
+    document.getElementById("high").innerHTML = round(kelvinToFahrenheit(dataArray[4]), 1);
+    document.getElementById("low").innerHTML = round(kelvinToFahrenheit(dataArray[5]), 1);
+    document.getElementById("humidity").innerHTML = dataArray[6] + "%";
+    document.getElementById("sunrise").innerHTML = formatDate(dataArray[7]);
+    document.getElementById("sunset").innerHTML = formatDate(dataArray[8]);
 }
 
 function changeLocation(){
@@ -106,15 +149,58 @@ function changeLocation(){
     loc=loc.toUpperCase();
     let asd = window.location.href
     let base = asd.split("?location=");
-    console.log(base);
+    // console.log(base);
     let url = base[0] + "?location=" + encodeURI(loc);
     window.location.replace(url);
 }
 
+function formateDateForApi(da){
+    let m = (da.getMonth()).toString();
+    if(m.length<2){
+        m = "0"+m
+    }
+    let d = (da.getDate()).toString();
+    if(d.length<2){
+        d= "0"+d
+    }
+    // console.log(m);
+    // console.log(d);
+    let date = m+"-"+d;
+    // console.log(date);
+    return date;
+}
+
+function loadDay(da, peopleArray){
+    // console.log(peopleArray);//did not load on first try fix this
+    document.getElementById("day").innerHTML = weekDays[da.getDay()];//sets day of week
+
+    let listElement = document.getElementById("peeps");
+    listElement.innerHTML = "";
+    for(let person of peopleArray){
+        let li = document.createElement("li");
+        li.innerHTML = person;
+        listElement.appendChild(li);
+    }
+}
+
+function checkAddFavorites() {
+    // console.log(favoriteLocations);
+    let favoritesButton = document.getElementById("favbutton");
+    if (favoriteLocations.includes(locFromApi)) {
+        favoritesButton.innerHTML = "Remove City from Favorites";
+        favoritesButton.setAttribute("onclick", "removeFavorite()");
+    } else {
+        favoritesButton.innerHTML = "Add City to Favorites";
+        favoritesButton.setAttribute("onclick", "addFavorite()");
+    }
+}
+
 async function main() {
-    let locFromApi = locationFromParams() || await getLocation();
+    loadDay(d, await getBirthdays(formateDateForApi(d)));
+    locFromApi = locationFromParams() || await getLocation();
     populateMainData(await getWeather(locFromApi));
     loadFavorites();
+    checkAddFavorites();
 }
 
 window.addEventListener("load", main);

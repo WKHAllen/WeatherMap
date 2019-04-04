@@ -8,9 +8,9 @@ header, footer {
 }
 
 #current-weather{
-    border: dashed black;
+    /*border: solid black;*/
     float:left;
-    width:69%;
+    width:70%;
 }
 
 #fav{
@@ -33,13 +33,13 @@ header, footer {
     width: 50%;
     height: 15%;
     margin: 0 auto;
-    border: solid;
+    /*border: solid;*/
     text-align: center;
     padding-top:0;
 }
 
 #hl{
-    border: solid;
+    /*border: solid;*/
     margin: 0 auto;
     width:20%;
     text-align: center;
@@ -51,6 +51,7 @@ header, footer {
 }
 
 #location{
+    margin-top:0px;
     margin-bottom: 2px;
 }
 
@@ -73,6 +74,44 @@ img{
     margin: 0 auto;
 }
 
+#locationInput {
+    margin: 20px auto;
+    width: 400px;
+}
 
+#humidity, #sunrise, #sunset {
+    text-align: right;
+}
 
+#day {
+    margin-bottom:0px;
+    text-align: center;
+    margin-top:30px;
+}
 
+#bDay{
+    border-top:solid;
+    float:left;
+    width:100%;
+}
+#bDay h1, #peeps{
+    text-align: center;
+    list-style-type:none;
+}
+
+#peeps{
+    margin:0 auto;
+    width:50%;
+    padding: 0;
+}
+
+body{
+    background-color: rgba(100, 160, 255, 0.66);
+}
+
+main{
+    float:left;
+    width:100%;
+    margin:0 auto;
+    height:600px;
+}
