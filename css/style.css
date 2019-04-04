@@ -3,30 +3,76 @@ header, footer {
     background-color: #005fff;
     text-align: center;
     padding: 20px;
-}
-
-.main-div {
-    padding: 20px;
+    float:left;
+    width:100%;
 }
 
 #current-weather{
-    border: solid black;
+    border: dashed black;
+    float:left;
+    width:69%;
+}
 
+#fav{
+    float: left;
+    width:15%;
+    border: solid black;
+}
+
+#fav h3, #extra h3, #location{
+    text-align: center;
+}
+
+#extra{
+    float: left;
+    width:15%;
+    border: solid black;
+}
+
+#important{
+    width: 50%;
+    height: 15%;
+    margin: 0 auto;
+    border: solid;
+    text-align: center;
+    padding-top:0;
+}
+
+#hl{
+    border: solid;
+    margin: 0 auto;
+    width:20%;
+    text-align: center;
+}
+
+#favbut{
+    text-align: center;
+    margin-bottom:10px;
+}
+
+#location{
+    margin-bottom: 2px;
+}
+
+img, #temp{
+    display: inline-block;
+}
+
+img{
+    width: 100px;
+    height:70px;
+}
+
+#temp{
+   padding-bottom:20px;
+   font-size: 400%;
+}
+
+#high, #low, #di{
+    display: inline-block;
     margin: 0 auto;
 }
 
-#favorites{
-    border:dotted 2px blue;
-}
 
-th, td{
- border: solid;
-}
 
-table{
-    border: solid;
-}
 
-#extra h2{
-    text-align: center;
-}

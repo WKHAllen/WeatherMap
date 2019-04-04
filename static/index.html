@@ -2,31 +2,45 @@
 <html>
     <head>
         <title>Weather Forecast</title>
-        <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+        <!-- <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"> -->
         <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+        <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
     </head>
+
     <body>
         <header>
             <h1>Weather Forecast</h1>
+            <input type="text" id="locationInput" placeholder="City, State">
+            <button type="button" onclick="changeLocation()">Lookup Location</button>
         </header>
 
         <main>
-            <div id="favorites">
-                    <h3 class="list-heading">Favorite Locations</h3>
-                    <ul id="favorite"></ul>
+            <div id="fav">
+                <!-- <button type="button" onclick="addFavorite()">Add City to Favorites</button>  -->
+                <h3 class="list-heading">Favorite Locations</h3>
+                <ul id="favoriteList"></ul>
             </div>
 
             <div id="current-weather">
-                <div id="important"><!-- style this to have slender height -->
-                    <h2 id="location"></h2> <!--style this centered right of img and BIG-->
-                    <img src="hi.jpg" id="pic" alt="current-weather-picture" height="42" width="42"> <!--style this centered and BIG-->
-                    <p id="temp"></p><!--style this centered left of img and BIG-->
-                    <p id="high"></p><!--style this left bottom-->
-                    <p id="low"></p><!--style this right bottom-->
+                <h1 id="location"></h1>
+
+                <div id="favbut">
+                    <button type="button" onclick="addFavorite()">Add City to Favorites</button>
                 </div>
-                <div id="extra">
-                    <h2>Additional Info</h2>
-                    <!-- style this to have big height -->
+                <div id="important">
+                    <img src="../images/hi.jpg" id="pic" alt="current-weather-picture">
+                    <div id="temp"></div>
+                </div>
+                <div id="hl">
+                    <p id="high"></p>
+                    <p id="di">|</p>
+                    <p id="low"></p>
+                </div>
+            </div>
+
+            <div id="extra">
+                    <h3>More</h3>
                     <!-- table here of all other data --> 
                     <table>
                         <tr id="humidity">
@@ -47,20 +61,12 @@
                         </tr>
                     </table>
                 </div>
-
-            </div>
-
-
-            
         </main>
 
         <footer>
             <p>&copy;2049 Allen Van Sant Industries</p>
         </footer>
 
-
-        <script type="text/javascript" src="../js/model.js"></script>
-        <script type="text/javascript" src="../js/view.js"></script>
-        <script type="text/javascript" src="../js/controller.js"></script>
+        <script type="text/javascript" src="../js/weather.js"></script>
     </body>
 </html>
