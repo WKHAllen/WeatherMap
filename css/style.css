@@ -8,52 +8,78 @@ header, footer {
 }
 
 #current-weather{
-    /*border: solid black;*/
-    float:left;
+    float: left;
     width:70%;
+    border-left: 1px solid #dfdfdf;
+    border-right: 1px solid #dfdfdf;
+    padding: 20px;
 }
 
 #fav{
     float: left;
     width:15%;
-    border: solid black;
+    padding: 10px;
+    /*margin-right: -1px;*/
+    /*border-right: 1px solid #dfdfdf;*/
 }
 
-#fav h3, #extra h3, #location{
+#fav h3, #extra h3, #city{
     text-align: center;
 }
 
-#extra{
+#favoriteList {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+#favoriteList li {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#favoriteList li a {
+    text-decoration: none;
+}
+
+#extra {
     float: left;
-    width:15%;
-    border: solid black;
+    width: 15%;
+    padding: 10px;
+    /*margin-left: -1px;*/
+    /*border-left: 1px solid #dfdfdf;*/
 }
 
 #important{
     width: 50%;
     height: 15%;
     margin: 0 auto;
-    /*border: solid;*/
     text-align: center;
     padding-top:0;
 }
 
 #hl{
-    /*border: solid;*/
     margin: 0 auto;
     width:20%;
     text-align: center;
+    padding-bottom: 20px;
 }
 
 #favbut{
     text-align: center;
+    margin-top: 10px;
     margin-bottom:10px;
 }
 
-#location{
-    margin-top:0px;
-    margin-bottom: 2px;
+#city {
+    margin-top: 10px;
+    margin-bottom: 20px; /* 10px */
 }
+
+/*#region {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}*/
 
 img, #temp{
     display: inline-block;
@@ -65,8 +91,8 @@ img{
 }
 
 #temp{
-   padding-bottom:20px;
-   font-size: 400%;
+    padding-bottom:20px;
+    font-size: 400%;
 }
 
 #high, #low, #di{
@@ -79,6 +105,10 @@ img{
     width: 400px;
 }
 
+#extra-table {
+    width: 100%;
+}
+
 #humidity, #sunrise, #sunset {
     text-align: right;
 }
@@ -86,13 +116,13 @@ img{
 #day {
     margin-bottom:0px;
     text-align: center;
-    margin-top:30px;
 }
 
 #bDay{
-    border-top:solid;
+    border-top: 1px solid #dfdfdf;
     float:left;
     width:100%;
+    padding: 20px;
 }
 #bDay h1, #peeps{
     text-align: center;
@@ -106,12 +136,14 @@ img{
 }
 
 body{
-    background-color: rgba(100, 160, 255, 0.66);
+    background-color: white;
 }
 
 main{
     float:left;
     width:100%;
     margin:0 auto;
-    height:600px;
+    min-height: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }

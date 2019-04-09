@@ -1,7 +1,7 @@
 "use strict";
 
-// var locUrl = "https://ipapi.co/74.207.62.6/json/";
-var locUrl = "http://www.geoplugin.net/json.gp"
+var ipUrl = "https://api.ipify.org/?format=json";
+// var locUrl = "http://www.geoplugin.net/json.gp";
 var apiKey = "be01eab3dff98198cc699228d54aee01";
 var apiKey2 = "b8f381522463f5ee0c04df3bfca0ca15";//josh's key in case of too many requests
 var conversionapyKey = "v00wb6EzD4xv6ZbTmofXJp5gNo4rkKYCM4g8KxTWgGcqQLvs";
@@ -10,9 +10,9 @@ var convertUrl="https://neutrinoapi.com/convert";
 var birthdayUrl="https://raw.githubusercontent.com/alebelcor/celeb-birthdays/master/output/celeb-birthdays.json";
 var favoriteLocations = [];
 var currLocation = "";
-var d=new Date();
-var weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-var bDays=["Josh", "Will", "Roman"];
+var d = new Date();
+var weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var bDays = ["Josh", "Will", "Roman"];
 var locFromApi;
 
 function addFavorite() {
@@ -34,9 +34,17 @@ async function getBirthdays(date){
     return d[date];
 }
 
+async function getIP() {
+    let ip = await getData(ipUrl);
+    return ip["ip"];
+}
+
 async function getLocation() {
+    let ip = await getIP();
+    let locUrl = "https://ipapi.co/" + ip + "/json/";
     let loc = await getData(locUrl);
-    return [loc["geoplugin_city"], loc["geoplugin_region"]].join(", ").toUpperCase();
+    return [loc["city"], loc["region"]].join(", ").toUpperCase();
+    // return [loc["geoplugin_city"], loc["geoplugin_region"]].join(", ").toUpperCase();
 }
 
 async function getData(url) {
@@ -57,13 +65,20 @@ function locationFromParams() { //searches for location already in page
 function populateFavoriteLocations(){ // takes localStorage memory of favoriteLocations dictionary
     let listElement = document.getElementById("favoriteList");
     listElement.innerHTML = "";
+
     for (let item of favoriteLocations) {
         let li = document.createElement("li");
         let a = document.createElement("a");
+        let button = document.createElement("button");
 
         a.setAttribute("href", "?location=" + encodeURI(item)); //URL CHANGE HAPPENS HERE
-        a.innerHTML = item;
-        
+        button.setAttribute("type", "button");
+        button.classList.add("btn");
+        button.classList.add("btn-primary");
+        button.classList.add("btn-block");
+        button.innerHTML = item;
+
+        a.appendChild(button);
         li.appendChild(a);
         listElement.appendChild(li);
     }
@@ -77,7 +92,7 @@ function saveFavorites(){ // save dictionary "favoriteLocations" to Local storag
 
 function loadFavorites(){ // load favorites from localStorage in "favoriteLocations"
     let string = window.localStorage.getItem("favoriteLocations");
-    if(string!=null){
+    if(string !== null){
         favoriteLocations = JSON.parse(string);
         populateFavoriteLocations();
     }
@@ -87,7 +102,7 @@ function loadFavorites(){ // load favorites from localStorage in "favoriteLocati
 }
 
 async function getWeather(location) {//returns dataArray of weather data from given url-(link to API of specified location(weatherUrl))
-    let weatherUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + encodeURI(location) + (",%20United%20States") + "&APPID=" + encodeURI(apiKey2);
+    let weatherUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + encodeURI(location) + (",%20United%20States") + "&APPID=" + encodeURI(apiKey2);
     let currW = await getData(weatherUrl);//Uses link defined by location api to retrieve data from API
     let dataArray=[];
     //These variables are the important pieces of weather data we will implement:
@@ -134,8 +149,8 @@ function onEnter(event) {
 
 function populateMainData(dataArray){
     currLocation=dataArray[9];
-    document.getElementById("location").innerHTML = dataArray[0];
-    document.getElementById("pic").src = "http://openweathermap.org/img/w/"+dataArray[2]+".png";
+    document.getElementById("city").innerHTML = dataArray[0];
+    document.getElementById("pic").src = "https://openweathermap.org/img/w/"+dataArray[2]+".png";
     document.getElementById("temp").innerHTML = round(kelvinToFahrenheit(dataArray[3]), 1) + "&deg;F";
     document.getElementById("high").innerHTML = round(kelvinToFahrenheit(dataArray[4]), 1);
     document.getElementById("low").innerHTML = round(kelvinToFahrenheit(dataArray[5]), 1);
@@ -149,7 +164,6 @@ function changeLocation(){
     loc=loc.toUpperCase();
     let asd = window.location.href
     let base = asd.split("?location=");
-    // console.log(base);
     let url = base[0] + "?location=" + encodeURI(loc);
     window.location.replace(url);
 }
@@ -163,10 +177,7 @@ function formateDateForApi(da){
     if(d.length<2){
         d= "0"+d
     }
-    // console.log(m);
-    // console.log(d);
     let date = m+"-"+d;
-    // console.log(date);
     return date;
 }
 
@@ -184,7 +195,6 @@ function loadDay(da, peopleArray){
 }
 
 function checkAddFavorites() {
-    // console.log(favoriteLocations);
     let favoritesButton = document.getElementById("favbutton");
     if (favoriteLocations.includes(locFromApi)) {
         favoritesButton.innerHTML = "Remove City from Favorites";
